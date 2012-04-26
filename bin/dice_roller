@@ -1,0 +1,5 @@
+#!/bin/env ruby
+
+require 'dice_roller.rb'
+
+DiceRoller.new
