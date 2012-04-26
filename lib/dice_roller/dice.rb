@@ -1,21 +1,17 @@
-# A class representing a single dice. Rolling this dice passes output to a buffer (string)
+# A class representing a single dice. Rolling this dice returns the result
 class DiceRoller::Dice
-  attr_accessor :faces, :outbuffer
+  attr_accessor :faces, :value
 
   # create a single dice
   #
   # faces: the number of sides on the dice
-  # outbuffer: a string to contain pretty output
-  def initialize(faces = 6, outbuffer = '')
+  def initialize(faces = 6)
     @faces = faces
-    @outbuffer = outbuffer
+    @value = nil
   end
 
-  # roll the dice, appending pretty output to its buffer
-  # and returning the result
+  # roll the dice, storing and returning the resuilt
   def roll()
-    tmp = rand(@faces) + 1
-    @outbuffer = @outbuffer << "#{@faces}-sided die => #{tmp}\n"
-    tmp
+    @value = rand(@faces) + 1
   end
 end

@@ -1,7 +1,8 @@
 # A class representing a bunch of dice (many objects of class Dice).
-# Rolling this die pool passes output to a buffer indicated by the die.
+# Rolling this die pool returns the results in an array of arrays
+# eg: [[], [3, 4, 2], [], [8, 7, 4], [], [], []]
 class DiceRoller::DicePool
-  attr_accessor :four, :six, :eight, :ten, :twelve, :twenty, :percent
+  attr_accessor :num_four, :num_six, :num_eight, :num_ten, :num_twelve, :num_twenty, :num_percent, :result
 
   # create a pool of Dice with different numbers of sides
   #
@@ -12,14 +13,16 @@ class DiceRoller::DicePool
   # twelve: the number of twelve-sided dice in the pool
   # twenty: the number of twenty-sided dice in the pool
   # percent: the number of percentile (100-sided) dice in the pool
-  def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percent = 0)
-    @four = four
-    @six = six
-    @eight = eight
-    @ten = ten
-    @twelve = twelve
-    @twenty = twenty
-    @percent = percent
+  def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percentile = 0)
+    @num_four = four
+    @num_six = six
+    @num_eight = eight
+    @num_ten = ten
+    @num_twelve = twelve
+    @num_twenty = twenty
+    @num_percentile = percentile
+
+    @result = ::DiceRoller::DiceResult.new
   end
 
   # roll the dice in the pool, with options. by default, roll_pool returns
@@ -29,9 +32,8 @@ class DiceRoller::DicePool
   # sum_num: instead of displaying successes, display the total value rolled on all dice
   # number_successes: instead of returning the sum total rolled, return the successes
   # one_cancels: 1s rolled on a d10 subtract from the total successes
-  # roll_again: the number on a d10 that rolls another d10
-  def roll_pool(success_value = 8, sum_num = false, number_successes = true, one_cancels = false, roll_again = 10, outbuffer = '')
-    buffer = outbuffer
+  # roll_again: the number on a d10 above which another d10 should be rolled
+  def roll_pool(success_value = 8, sum_num = false, number_successes = true, one_cancels = false, roll_again = 10)
     sum_value = 0
     successes = 0
     ones = 0
@@ -45,74 +47,62 @@ class DiceRoller::DicePool
       rote = true
     end
 
-    four_side = Die.new(4, buffer)
-    six_side = Die.new(6, buffer)
-    eight_side = Die.new(8, buffer)
-    ten_side = Die.new(10, buffer)
-    twelve_side = Die.new(12, buffer)
-    twenty_side = Die.new(20, buffer)
-    percentile = Die.new(100, buffer)
+    # set up a single dice of each type and an array to store their results
+    four_sided = ::DiceRoller::Dice.new(4)
+    four_results = []
 
-    @four.times do
-      sum_value += four_side.roll()
-    end
-    @six.times do
-      sum_value += six_side.roll()
-    end
-    @eight.times do
-      sum_value += eight_side.roll()
-    end
-    @ten.times do
-      is_rote = rote
+    six_sided = ::DiceRoller::Dice.new(6)
+    six_results = []
 
-      while tmp = ten_side.roll()
-        sum_value += tmp
-        successes += 1 if tmp >= success_value
-        rerolls += 1 if tmp >= roll_again
-        if tmp <= 1
-          ones += 1
-          successes -= 1 if one_cancels
-        end
+    eight_sided = ::DiceRoller::Dice.new(8)
+    eight_results = []
 
-        break unless number_successes
-        if tmp >= roll_again
-          next
-        elsif is_rote and ( tmp < roll_again )
-          is_rote = false
-          rote_rerolls += 1
-          next
-        else
-          break
-        end
-      end
+    ten_sided = ::DiceRoller::Dice.new(10)
+    ten_results = []
+
+    twelve_sided = ::DiceRoller::Dice.new(12)
+    twelve_results = []
+
+    twenty_sided = ::DiceRoller::Dice.new(20)
+    twenty_results =  []
+
+    percentile = ::DiceRoller::Dice.new(100)
+    percentile_results = []
+
+    # roll dem bones!
+    @num_four.times do
+      four_results << four_sided.roll
     end
-    @twelve.times do
-      sum_value += twelve_side.roll()
+    @num_six.times do
+      six_results << six_sided.roll
     end
-    @twenty.times do
-      sum_value += twenty_side.roll()
+    @num_eight.times do
+      eight_results << eight_sided.roll
     end
-    @percent.times do
-      sum_value += percentile.roll()
+    @num_ten.times do
+      ten_results << ten_sided.roll
+    end
+    @num_twelve.times do
+      twelve_sided << twelve_sided.roll
+    end
+    @num_twenty.times do
+      twenty_results << twenty_sided.roll
+    end
+    @num_percentile.times do
+      percentile_results << percentile.roll
     end
 
-    buffer = buffer << "Ones Rolled: #{ones}\n" if one_cancels and number_successes
-    buffer = buffer << "Re-rolls: #{rerolls}\n" unless ((@four + @six + @eight + @twelve + @twenty + @percent) != 0) or sum_num
-    buffer = buffer << "Rote Re-rolls: #{rote_rerolls}\n" if rote and ((@four + @six + @eight + @twelve + @twenty + @percent) == 0) and ! sum_num
-    buffer = buffer << "Successes: #{successes}\n" if number_successes
-    buffer = buffer << "Sum Value: #{sum_value}\n" if sum_num
-
-    buffer
+    ::DiceRoller::DiceResult.new(four_results, six_results, eight_results, ten_results, twelve_results, twenty_results, percentile_results)
   end
 
   # overrides the inspect method to provide some useful output
   def inspect()
-    puts "four-sided dice: #{@four}"
-    puts "six-sided dice: #{@six}"
-    puts "eight-sided dice: #{@eight}"
-    puts "ten-sided dice: #{@ten}"
-    puts "twelve-sided dice: #{@twelve}"
-    puts "twenty-sided dice: #{@twenty}"
-    puts "percentile dice: #{@percentile}"
+    puts "four-sided dice: #{@num_four}"
+    puts "six-sided dice: #{@num_six}"
+    puts "eight-sided dice: #{@num_eight}"
+    puts "ten-sided dice: #{@num_ten}"
+    puts "twelve-sided dice: #{@num_twelve}"
+    puts "twenty-sided dice: #{@num_twenty}"
+    puts "percentile dice: #{@num_percentile}"
   end
 end
