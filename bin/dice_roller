@@ -1,5 +1,5 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 
 require 'dice_roller.rb'
 
-DiceRoller.new
+DiceRoller::Cli.new(ARGV)
