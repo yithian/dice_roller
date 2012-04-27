@@ -49,7 +49,7 @@ class DiceRoller
   end
 end
 
-require 'dice_roller/dice.rb'
-require 'dice_roller/dice_pool.rb'
-require 'dice_roller/dice_result.rb'
-require 'dice_roller/cli.rb'
+require 'dice_roller/dice'
+require 'dice_roller/dice_pool'
+require 'dice_roller/dice_result'
+require 'dice_roller/cli'
