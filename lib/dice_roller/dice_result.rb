@@ -4,14 +4,14 @@
 class DiceRoller::DiceResult
   attr_accessor :four_result, :six_result, :eight_result, :ten_result, :twelve_result, :twenty_result, :percentile_result
 
-  def initialize(four = [], six = [], eight = [], ten = [], twelve = [], twenty = [], percent = [])
+  def initialize(four = [], six = [], eight = [], ten = [], twelve = [], twenty = [], percentile = [])
     @four_result = four
     @six_result = six
     @eight_result = eight
     @ten_result = ten
     @twelve_result = twelve
     @twenty_result = twenty
-    @percent_result = percent
+    @percentile_result = percentile
   end
 
   # returns the sum total of all values in the results
@@ -36,7 +36,7 @@ class DiceRoller::DiceResult
     @twenty_result.each do |result|
       sum += result
     end
-    @percent_result.each do |result|
+    @percentile_result.each do |result|
       sum += result
     end
 
