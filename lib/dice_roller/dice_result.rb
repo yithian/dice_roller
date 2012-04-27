@@ -2,7 +2,7 @@
 # it takes a series of arrays as input -- these arrays
 # should contain the results of dice rolls
 class DiceRoller::DiceResult
-  attr_accessor :four_result, :six_result, :eight_result, :ten_result, :twelve_result, :twenty_result, :percentile_result
+  attr_reader :four_result, :six_result, :eight_result, :ten_result, :twelve_result, :twenty_result, :percentile_result
 
   def initialize(four = [], six = [], eight = [], ten = [], twelve = [], twenty = [], percentile = [])
     @four_result = four
@@ -12,6 +12,7 @@ class DiceRoller::DiceResult
     @twelve_result = twelve
     @twenty_result = twenty
     @percentile_result = percentile
+    @rerolled = false
   end
 
   # returns the sum total of all values in the results
@@ -43,7 +44,8 @@ class DiceRoller::DiceResult
     sum
   end
 
-  # returns the number of successes as determined by the paremeters
+  # returns a hash with the number of successes (as determined by the paremeters)
+  # and the results of all the dice rolled
   #
   # min: minimum value for a success
   # reroll: minimum value to roll an additional d10
@@ -51,7 +53,16 @@ class DiceRoller::DiceResult
   def successes(min = 8, reroll = 10, subtract = false)
     count = 0
     rote = false
-    rote_rerolls = 0
+
+    # if this result set has already been rerolled, simply count the successes
+    # in the result and return the total (rather than rerolling /again/)
+    if @rerolled
+      @ten_result.each do |value|
+        count += 1 if value >= min
+      end
+
+      return count
+    end
 
     if reroll == 0
       reroll = 10
@@ -61,40 +72,35 @@ class DiceRoller::DiceResult
     # this bonus dice is used for any rerolls that accrue
     bonus_dice = ::DiceRoller::Dice.new(sides = 10)
 
+    # reroll failed dice once and add the results to the array
+    if rote
+      rote_rerolls = []
+
+      @ten_result.each do |result|
+        rote_rerolls << bonus_dice.roll if result < min
+      end
+
+      @ten_result += rote_rerolls
+    end
+
     # loop through the rolled results and count successes. values greater than
     # the reroll value are rolled again.
     @ten_result.each do |result|
       count += 1 if result >= min
-      rote_rerolls += 1 if result < min and rote
-
       count -= 1 if subtract and result == 1
 
       # each pass through this loop is a rerolled dice
       while result >= reroll
         result = bonus_dice.roll
+
+        # add the result for historical accuracy
         @ten_result << result
 
         count += 1 if result >= min
       end
     end
 
-    # rote rerolls are done separately because their failed rerolls would
-    # be added into the results, which would then be rerolled again. bad.
-    rote_rerolls.times do
-      result = bonus_dice.roll
-      @ten_result << result
-
-      count += 1 if result >= min
-
-      # each pass through this loop is a rerolled dice
-      while result >= reroll
-        result = bonus_dice.roll
-        @ten_result << result
-
-        count += 1 if result >= min
-      end
-    end
-
+    @rerolled = true
     count
   end
 end
