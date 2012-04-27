@@ -46,7 +46,21 @@ class DiceRoller::Cli
       end
     end
     
-    opts.parse!(args)
+    begin
+      opts.parse!(args)
+    rescue OptionParser::MissingArgument => e
+      puts "Missing argument"
+      puts opts
+      exit
+    rescue OptionParser::InvalidArgument => e
+      puts "Invalid argument"
+      puts opts
+      exit
+    rescue OptionParser::InvalidOption => e
+      puts "Invalid option"
+      puts opts
+      exit
+    end
     
     ::DiceRoller.new(four, six, eight, ten, twelve, twenty, percentile, type)
   end
