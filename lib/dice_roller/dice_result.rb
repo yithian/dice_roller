@@ -47,20 +47,48 @@ class DiceRoller::DiceResult
   #
   # min: minimum value for a success
   # reroll: minimum value to roll an additional d10
-  # rote: if true, rerolls all failed dice once
   # subtract: if true, causes values of 1 to subtract from the success total
-  def successes(min = 8, reroll = 10, rote = false, subtract = false)
+  def successes(min = 8, reroll = 10, subtract = false)
     count = 0
-    reroll = 10 if rote
+    rote = false
+    rote_rerolls = 0
 
+    if reroll == 0
+      reroll = 10
+      rote = true
+    end
+
+    # this bonus dice is used for any rerolls that accrue
+    bonus_dice = ::DiceRoller::Dice.new(sides = 10)
+
+    # loop through the rolled results and count successes. values greater than
+    # the reroll value are rolled again.
     @ten_result.each do |result|
       count += 1 if result >= min
+      rote_rerolls += 1 if result < min and rote
 
       count -= 1 if subtract and result == 1
 
       # each pass through this loop is a rerolled dice
       while result >= reroll
-        result = ::DiceRoller::Dice.new(sides = 10).roll
+        result = tmp_dice.roll
+        @ten_result << result
+
+        count += 1 if result >= min
+      end
+    end
+
+    # rote rerolls are done separately because their failed rerolls would
+    # be added into the results, which would then be rerolled again. bad.
+    rote_rerolls.times do
+      result = bonus_dice.roll
+      @ten_result << result
+
+      count += 1 if result >= min
+
+      # each pass through this loop is a rerolled dice
+      while result >= reroll
+        result = tmp_dice.roll
         @ten_result << result
 
         count += 1 if result >= min
