@@ -1,14 +1,53 @@
+# rolls dice and formats the results
 class DiceRoller
-  def initialize()
-    results = DicePool.new(0, 0, 0, 10, 0, 0, 0).roll_pool
+  def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percentile = 0, type = :sum)    
+    results = DicePool.new(four, six, eight, ten, twelve, twenty, percentile).roll_pool
 
-    buffer = ""
-
-    buffer << "Successes: #{results.successes}\n"
-    buffer << "Sum Value: #{results.total}\n"
+    case type
+    when :sum
+      # output each dice's value and the sum total
+      puts "sum total: #{results.total}"
+      
+      results.four_result.each do |value|
+        puts "four-sided dice: #{value}"
+      end
+      
+      results.six_result.each do |value|
+        puts "six-sided dice: #{value}"
+      end
+      
+      results.eight_result.each do |value|
+        puts "eight-sided dice: #{value}"
+      end
+      
+      results.ten_result.each do |value|
+        puts "ten-sided dice: #{value}"
+      end
+      
+      results.twelve_result.each do |value|
+        puts "twelve-sided dice: #{value}"
+      end
+      
+      results.twenty_result.each do |value|
+        puts "twenty-sided dice: #{value}"
+      end
+      
+      results.percentile_result.each do |value|
+        puts "percentile dice: #{value}"
+      end
+    when :successes
+      # output the ten-sided dice's values and the
+      # number of successes
+      puts "successes: #{results.successes}"
+      
+      results.ten_result.each do |value|
+        puts "ten-sided dice: #{value}"
+      end
+    end
   end
 end
 
 require 'dice_roller/dice.rb'
 require 'dice_roller/dice_pool.rb'
 require 'dice_roller/dice_result.rb'
+require 'dice_roller/cli.rb'
