@@ -1,0 +1,4 @@
+dice_roller is, surprisingly, a dice rolling application intended for role-playing games.
+
+It takes numbers of dice as input and displays the results of each and either the total
+value rolled or the successes rolled (using the Storyteller system).
