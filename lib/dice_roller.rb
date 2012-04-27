@@ -6,8 +6,6 @@ class DiceRoller
     case type
     when :sum
       # output each dice's value and the sum total
-      puts "sum total: #{results.total}"
-      
       results.four_result.each do |value|
         puts "four-sided dice: #{value}"
       end
@@ -35,14 +33,18 @@ class DiceRoller
       results.percentile_result.each do |value|
         puts "percentile dice: #{value}"
       end
+      
+      puts "sum total: #{results.total}"
     when :successes
       # output the ten-sided dice's values and the
       # number of successes
-      puts "successes: #{results.successes(minimum, reroll, subtract)}"
-      
+      suxx = results.successes(minimum, reroll, subtract)
+
       results.ten_result.each do |value|
         puts "ten-sided dice: #{value}"
       end
+
+      puts "successes: #{suxx}"
     end
   end
 end
