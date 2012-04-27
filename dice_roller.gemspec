@@ -7,6 +7,6 @@ Gem::Specification.new do |s|
   s.authors       = ['Alex Chvatal']
   s.email         = ['m.chvatal@gmail.com']
   s.require_path  = 'lib'
-  s.files         = Dir["{lib}/**/*.rb", "bin/*", "LICENSE"]
-  s.executables   = ["dice-roller"]
+  s.files         = Dir['lib/**/*.rb'] + Dir['bin/*']
+  s.executables   = ["dice_roller"]
 end
