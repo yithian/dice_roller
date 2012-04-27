@@ -71,7 +71,7 @@ class DiceRoller::DiceResult
 
       # each pass through this loop is a rerolled dice
       while result >= reroll
-        result = tmp_dice.roll
+        result = bonus_dice.roll
         @ten_result << result
 
         count += 1 if result >= min
