@@ -9,8 +9,17 @@ class DiceRoller::Cli
     
     # default result set to sum
     type = :sum
+
+    # default minimum value for success to 8
+    minimum = 8
+
+    # default reroll value to 10
+    reroll = 10
+
+    # default to ones not subtracting successes
+    subtract = false
     
-    opts = OptionParser.new do |opts|
+    options = OptionParser.new do |opts|
       opts.banner = "Usage: dice-roller"
       
       opts.on("--four dice", Integer, "number of four-sided dice to roll") do |dice|
@@ -41,27 +50,49 @@ class DiceRoller::Cli
         percentile = dice
       end
       
-      opts.on("--type TYPE", [:sum, :successes], "select type of result (sum, successes)") do |t|
+      opts.on("--type [sum|successes]", [:sum, :successes], "select type of result (sum, successes)") do |t|
         type = t
+
+        if type.nil?
+          puts opts
+          exit
+        end
+      end
+
+      opts.on("--reroll number", Integer, "rolling this or above rolls another ten-sided dice") do |val|
+        reroll = val
+      end
+
+      opts.on("--rote", "make this roll a rote action") do |flag|
+        # DiceRoller::DicePool interprets a reroll value of 0 as a rote action
+        reroll = 0 if flag
+      end
+
+      opts.on("--min number", Integer, "minimum value to be considered a success") do |min|
+        minimum = min
+      end
+
+      opts.on("--[no-]sub", "cause ones to subtract from the success total") do |flag|
+        subtract = flag
       end
     end
     
     begin
-      opts.parse!(args)
+      options.parse!(args)
     rescue OptionParser::MissingArgument => e
       puts "Missing argument"
-      puts opts
+      puts options
       exit
     rescue OptionParser::InvalidArgument => e
       puts "Invalid argument"
-      puts opts
+      puts options
       exit
     rescue OptionParser::InvalidOption => e
       puts "Invalid option"
-      puts opts
+      puts options
       exit
     end
     
-    ::DiceRoller.new(four, six, eight, ten, twelve, twenty, percentile, type)
+    ::DiceRoller.new(four, six, eight, ten, twelve, twenty, percentile, type, reroll, minimum, subtract)
   end
 end

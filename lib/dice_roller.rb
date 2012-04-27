@@ -1,6 +1,6 @@
 # rolls dice and formats the results
 class DiceRoller
-  def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percentile = 0, type = :sum)    
+  def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percentile = 0, type = :sum, reroll = 10, minimum = 8, subtract = false)
     results = DicePool.new(four, six, eight, ten, twelve, twenty, percentile).roll_pool
 
     case type
@@ -38,7 +38,7 @@ class DiceRoller
     when :successes
       # output the ten-sided dice's values and the
       # number of successes
-      puts "successes: #{results.successes}"
+      puts "successes: #{results.successes(minimum, reroll, subtract)}"
       
       results.ten_result.each do |value|
         puts "ten-sided dice: #{value}"
