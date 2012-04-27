@@ -61,6 +61,7 @@ class DiceRoller::DiceResult
       # each pass through this loop is a rerolled dice
       while result >= reroll
         result = ::DiceRoller::Dice.new(sides = 10).roll
+        @ten_result << result
 
         count += 1 if result >= min
       end
