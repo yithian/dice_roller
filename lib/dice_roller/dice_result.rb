@@ -2,7 +2,7 @@
 # it takes a series of arrays as input -- these arrays
 # should contain the results of dice rolls
 class DiceRoller::DiceResult
-  attr_reader :four_result, :six_result, :eight_result, :ten_result, :twelve_result, :twenty_result, :percent_result
+  attr_accessor :four_result, :six_result, :eight_result, :ten_result, :twelve_result, :twenty_result, :percentile_result
 
   def initialize(four = [], six = [], eight = [], ten = [], twelve = [], twenty = [], percent = [])
     @four_result = four
