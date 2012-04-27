@@ -1,6 +1,5 @@
 # A class representing a bunch of dice (many objects of class Dice).
-# Rolling this die pool returns the results in an array of arrays
-# eg: [[], [3, 4, 2], [], [8, 7, 4], [], [], []]
+# Rolling this die pool returns an object of the DiceResult class
 class DiceRoller::DicePool
   attr_accessor :num_four, :num_six, :num_eight, :num_ten, :num_twelve, :num_twenty, :num_percent, :result
 
