@@ -1,6 +1,7 @@
 # A class representing a single dice. Rolling this dice returns the result
 class DiceRoller::Dice
-  attr_accessor :faces, :value
+  attr_accessor :faces
+  attr_reader :value
 
   # create a single dice
   #
