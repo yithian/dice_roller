@@ -1,17 +1,17 @@
 # A class representing a bunch of dice (many objects of class Dice).
 # Rolling this die pool returns an object of the DiceResult class
 class DiceRoller::DicePool
-  attr_accessor :num_four, :num_six, :num_eight, :num_ten, :num_twelve, :num_twenty, :num_percent, :result
+  attr_accessor :num_four, :num_six, :num_eight, :num_ten, :num_twelve, :num_twenty, :num_percentile, :result
 
   # create a pool of Dice with different numbers of sides
   #
-  # four: the number of four-sided dice in the pool
-  # six: the number of six-sided dice in the pool
-  # eight: the number of eight-sided dice in the pool
-  # ten: the number of ten-sided dice in the pool
-  # twelve: the number of twelve-sided dice in the pool
-  # twenty: the number of twenty-sided dice in the pool
-  # percent: the number of percentile (100-sided) dice in the pool
+  # num_four: the number of four-sided dice in the pool
+  # num_six: the number of six-sided dice in the pool
+  # num_eight: the number of eight-sided dice in the pool
+  # num_ten: the number of ten-sided dice in the pool
+  # num_twelve: the number of twelve-sided dice in the pool
+  # num_twenty: the number of twenty-sided dice in the pool
+  # num_percentile: the number of percentile (100-sided) dice in the pool
   def initialize(four = 0, six = 0, eight = 0, ten = 0, twelve = 0, twenty = 0, percentile = 0)
     @num_four = four
     @num_six = six
@@ -82,7 +82,7 @@ class DiceRoller::DicePool
       ten_results << ten_sided.roll
     end
     @num_twelve.times do
-      twelve_sided << twelve_sided.roll
+      twelve_results << twelve_sided.roll
     end
     @num_twenty.times do
       twenty_results << twenty_sided.roll
