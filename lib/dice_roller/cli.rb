@@ -41,12 +41,8 @@ class DiceRoller::Cli
         percentile = dice
       end
       
-      opts.on("--type [TYPE]", [:sum, :successes], "select type of result (sum, successes)") do |t|
+      opts.on("--type TYPE", [:sum, :successes], "select type of result (sum, successes)") do |t|
         type = t
-      end
-      
-      opts.on("--successes", "show the number of successes on ten-sided dice") do
-        successes = true
       end
     end
     
