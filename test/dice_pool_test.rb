@@ -7,13 +7,13 @@ class DicePoolTest < Test::Unit::TestCase
   end
 
   def test_access_dice
-    assert_equal @dp.num_four, 1, "read wrong number of four-sided dice"
-    assert_equal @dp.num_six, 2, "read wrong number of six-sided dice"
-    assert_equal @dp.num_eight, 3, "read wrong number of eight-sided dice"
-    assert_equal @dp.num_ten, 4, "read wrong number of ten-sided dice"
-    assert_equal @dp.num_twelve, 5, "read wrong number of twelve-sided dice"
-    assert_equal @dp.num_twenty, 6, "read wrong number of twenty-sided dice"
-    assert_equal @dp.num_percentile, 7, "read wrong number of percentile dice"
+    assert_equal 1, @dp.num_four, "read wrong number of four-sided dice"
+    assert_equal 2, @dp.num_six, "read wrong number of six-sided dice"
+    assert_equal 3, @dp.num_eight, "read wrong number of eight-sided dice"
+    assert_equal 4, @dp.num_ten, "read wrong number of ten-sided dice"
+    assert_equal 5, @dp.num_twelve, "read wrong number of twelve-sided dice"
+    assert_equal 6, @dp.num_twenty, "read wrong number of twenty-sided dice"
+    assert_equal 7, @dp.num_percentile, "read wrong number of percentile dice"
 
     assert @dp.num_four = 2, "couldn't change number of four-sided dice"
     assert @dp.num_six = 2, "couldn't change number of six-sided dice"
@@ -25,6 +25,6 @@ class DicePoolTest < Test::Unit::TestCase
   end
 
   def test_roll
-    assert_equal @dp.roll_pool.class, DiceRoller::DiceResult, "rolling a dice pool did not return a dice result set"
+    assert_equal DiceRoller::DiceResult, @dp.roll_pool.class, "rolling a dice pool did not return a dice result set"
   end
 end

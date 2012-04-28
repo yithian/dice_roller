@@ -7,7 +7,7 @@ class DicePoolTest < Test::Unit::TestCase
   end
 
   def test_total
-    assert_equal @dr.total, 30, "sum didn't calculate correctly"
+    assert_equal 30, @dr.total, "sum didn't calculate correctly"
   end
 
   def test_successes_normal
