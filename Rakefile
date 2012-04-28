@@ -27,7 +27,7 @@ end
 
 desc "run the test suite"
 task :test do
-  ruby 'test/test_dice.rb'
-  ruby 'test/test_dice_pool.rb'
-  ruby 'test/test_dice_result.rb'
+  Dir.glob('test/*').each do |file|
+    ruby file
+  end
 end
