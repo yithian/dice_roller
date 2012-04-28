@@ -7,19 +7,19 @@ class DiceRoller::Cli
   
   def initialize(args)
     # default the number of each type of dice to zero
-    four = six = eight = ten = twelve = twenty = percentile = 0
+    @four = @six = @eight = @ten = @twelve = @twenty = @percentile = 0
     
     # default result set to sum
-    type = :sum
+    @type = :sum
 
     # default minimum value for success to 8
-    minimum = 8
+    @minimum = 8
 
     # default reroll value to 10
-    reroll = 10
+    @reroll = 10
 
     # default to ones not subtracting successes
-    subtract = false
+    @subtract = false
     
     options = OptionParser.new do |opts|
       opts.banner = "Usage: dice-roller"
