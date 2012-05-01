@@ -9,7 +9,7 @@ spec = Gem::Specification.new do |s|
     dice_roller is a pure ruby application that rolls dice for role playing games.
     it is primarily built to handle d20 or Storytelling style rolls.
   EOF
-  s.version       = '0.0.2'
+  s.version       = '0.0.3'
   s.platform      = Gem::Platform::RUBY
   s.authors       = ['Alex Chvatal']
   s.email         = ['m.chvatal@gmail.com']
