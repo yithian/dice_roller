@@ -93,6 +93,9 @@ class DiceRoller::Cli
       puts "Invalid option"
       puts options
       exit
+    rescue OptionParser::AmbiguousOption => e
+      puts options
+      exit
     end
     
     return if $TEST
