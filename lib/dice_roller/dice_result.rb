@@ -85,21 +85,29 @@ class DiceRoller::DiceResult
 
     # loop through the rolled results and count successes. values greater than
     # the reroll value are rolled again.
-    @ten_result.each do |result|
-      count += 1 if result >= min
-      count -= 1 if subtract and result == 1
+    final_result = []
 
-      # each pass through this loop is a rerolled dice
-      while result >= reroll
-        result = bonus_dice.roll
+    @ten_result.each do |dice|
+      this_dice = [dice]
 
-        # add the result for historical accuracy
-        @ten_result << result
-
+      this_dice.each do |result|
         count += 1 if result >= min
+        count -= 1 if subtract and result == 1
+
+        # each pass through this loop is a rerolled dice
+        if result >= reroll
+          bonus_result = bonus_dice.roll
+
+          # add the reroll result to the current dice's results, this will
+          # reroll as appropriate
+          this_dice << bonus_result
+        end
       end
+
+      final_result += this_dice
     end
 
+    @ten_result = final_result
     @rerolled = true
     count
   end
